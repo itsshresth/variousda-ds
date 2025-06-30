@@ -1,158 +1,176 @@
-Indian YouTube Trending Videos: A Data-Driven Exploration
+# Indian YouTube Trending Videos: A Data-Driven Exploration
 
-Abstract
-This study dissects the top-200 trending YouTube videos in India by harvesting live data from the YouTube Data API. Through rigorous cleaning, feature engineering, and exploratory data analysis (EDA), we illuminate the statistical signatures of viral content. Principal findings reveal (i) power-law engagement with heavy right skew, (ii) Music and Entertainment as dominant categories for both frequency and average engagement, (iii) a measurable preference for concise videos (< 10 min), and (iv) weak influence of tag count on viewership. All code is modular, reproducible, and configured for rapid re-runs with new API keys or regions.
+> "What makes a video go viral in India? Let's decode the trends, categories, and patterns behind the magic."
 
-Table of Contents
-Dataset & Collection Protocol
+---
 
-Analytical Methodology
+## Abstract
 
-2.1 Pre-processing
+This project analyzes the Top 200 trending YouTube videos in India, retrieved live via the YouTube Data API. We perform structured pre-processing, insightful feature engineering, and visual analytics to uncover:
 
-2.2 Feature Engineering
+- Power-law distribution in engagement
+- Music & Entertainment as the most viral categories
+- Concise content (< 10 min) winning the attention war
+- Tag count not significantly influencing viewership
 
-2.3 Visual Analytics Pipeline
+Everything is modular, reproducible, and ready for plug-and-play reruns.
 
-Results & Discussion
+---
 
-3.1 Engagement Distributions
+## Table of Contents
 
-3.2 Cross-Metric Correlations
+1. [Dataset & Collection Protocol](#1-dataset--collection-protocol)
+2. [Analytical Methodology](#2-analytical-methodology)
+    - 2.1 [Pre-processing](#21-pre-processing)
+    - 2.2 [Feature Engineering](#22-feature-engineering)
+    - 2.3 [Visual Analytics Pipeline](#23-visual-analytics-pipeline)
+3. [Results & Discussion](#3-results--discussion)
+4. [Key Takeaways](#4-key-takeaways)
+5. [Project Structure & Reproducibility](#5-project-structure--reproducibility)
+6. [Dependencies](#dependencies)
+7. [License](#license)
+8. [Contributing](#contributing)
 
-3.3 Category-Level Insights
+---
 
-3.4 Duration Effects
+## 1. Dataset & Collection Protocol
 
-3.5 Metadata Factors (Tags & Timing)
+| Parameter        | Details |
+|------------------|---------|
+| Source           | YouTube Data API (`mostPopular` endpoint) |
+| Region           | `IN` (India) |
+| Sample Size      | 200 videos |
+| Fields           | ID, Title, Description, Category, Stats, Tags, Duration, PublishedAt |
+| Storage          | `trending_videos.csv` (~2 MB, UTF-8) |
+| Quota Use        | ≤ 10,000 units/day, compliant with API TOS |
 
-Key Take-aways
+---
 
-Project Structure & Reproducibility
+## 2. Analytical Methodology
 
-Possible Extensions
+### 2.1 Pre-processing
 
-References
+- Convert `publishedAt` to datetime format
+- Parse ISO-8601 video durations to seconds
+- Rescale:
+    - `views`, `likes` → Lakhs
+    - `comments` → Thousands
+- Handle missing values:
+    - Tags → empty lists
+    - Numeric NaNs → zeroes
 
-1. Dataset & Collection Protocol
-Source: YouTube Data API "mostPopular" endpoint
+### 2.2 Feature Engineering
 
-Scope: 200 videos, regionCode='IN', collected in a single snapshot
+| Feature               | Definition                         | Purpose |
+|-----------------------|-------------------------------------|---------|
+| `view_count_lakhs`    | Views ÷ 1e5                         | Cultural relevance |
+| `like_count_lakhs`    | Likes ÷ 1e5                         | — |
+| `comment_count_k`     | Comments ÷ 1e3                      | — |
+| `duration_seconds`    | Parsed video duration               | Continuous metric |
+| `duration_range`      | Binned (0–5, 5–10, 10–20, etc.)     | Non-linear effects |
+| `tag_count`           | Length of tag list                 | Metadata richness |
+| `publish_hour`        | Local hour (0–23)                  | Circadian behavior |
 
-Fields: Video/Channel identifiers, title, description, publishedAt, statistics (views, likes, comments), content details (ISO-8601 duration), tags, and category IDs
+### 2.3 Visual Analytics Pipeline
 
-Storage: Raw JSON to trending_videos.csv (UTF-8, ~2 MB)
+- Histograms: Views, Likes, Comments
+- Correlation heatmap: Engagement metrics
+- Category frequency and average engagement bar plots
+- Duration vs Engagement bar chart
+- Scatterplots:
+    - Duration vs Views
+    - Tag Count vs Views
+    - Publish Hour vs Views
+- Publish Hour frequency plot
+- Optional Seaborn pairplot
 
-Ethics & Quotas: Adheres to Google API TOS; ≤ 10,000 units per day
+---
 
-2. Analytical Methodology
-2.1 Pre-processing
-Convert publishedAt to datetime; parse durations via isodate
+## 3. Results & Discussion
 
-Numeric Rescaling:
+### 3.1 Engagement Distributions
+- Strong right skew
+- 80% of videos have fewer than 30 lakh views, while a few exceed 200 lakh
+- Confirms power-law distribution in virality
 
-Views & likes → Lakhs (100,000)
+### 3.2 Cross-Metric Correlations
+- Pearson coefficients > 0.85 between views, likes, and comments
+- Indicates high correlation across engagement metrics
 
-Comments → Thousands
+### 3.3 Category-Level Insights
+| Category        | Avg Views (Lakhs) | Highlights |
+|------------------|--------------------|------------|
+| Music            | ~55L               | Most dominant category |
+| Entertainment    | ~52L               | High engagement |
+| News             | ~18L               | Short shelf-life content |
 
-Missing values: list-type fields (tags) default to empty lists; numeric NaNs coerced to zeros
+### 3.4 Duration Effects
+| Duration Bin (min) | Avg Views (Lakhs) |
+|---------------------|--------------------|
+| 0–5                | ~60                |
+| 5–10               | ~45                |
+| 10–20              | ~30                |
 
-2.2 Feature Engineering
-Feature	Definition	Rationale
-view_count_lakhs	views / 1e5	Culturally relevant magnitude
-like_count_lakhs	likes / 1e5	—
-comment_count_k	comments / 1e3	—
-duration_seconds	ISO-8601 → seconds	Enables continuous analysis
-duration_range	Bins: 0–5, 5–10, 10–20, 20–60, 60–120 min	Non-linear length effects
-tag_count	len(tags)	Metadata richness
-publish_hour	Local hour (0–23)	Circadian audience patterns
-2.3 Visual Analytics Pipeline
-The notebook renders ten core plots:
+Shorter videos receive higher average view counts.
 
-Histograms of views, likes, comments (lakhs/thousands)
+### 3.5 Metadata Factors
+- Tags: Very low correlation with viewership
+- Publish Hour: Slight clustering around 12–15 IST, but no significant predictive value
 
-Correlation heat-map (views ↔ likes ↔ comments)
+---
 
-Category bar-count (frequency)
+## 4. Key Takeaways
 
-Category engagement bars (mean views/likes/comments)
+- Viral engagement follows a power-law distribution
+- Music and Entertainment dominate trending content
+- Videos under 10 minutes achieve higher average views
+- Tag quantity offers limited value; relevance is more important
+- Upload timing has minimal impact compared to content quality
 
-Duration-range engagement bars
+---
 
-Scatter: duration (s) vs views (lakhs)
+## 5. Project Structure & Reproducibility
 
-Scatter: tag_count vs views
-
-Scatter: publish_hour vs views (lakhs)
-
-Publish-hour count plot (frequency)
-
-Optional seaborn pair-plot of three engagement metrics
-
-3. Results & Discussion
-3.1 Engagement Distributions
-The histograms are strongly right-skewed; about 80% of videos sit below 30 L views, yet a handful exceed 200 L. This conforms to a power-law popularity curve common on social platforms. Likes and comments echo the pattern, affirming that viral visibility concentrates engagement.
-
-3.2 Cross-Metric Correlations
-Pearson coefficients exceed 0.85 across views–likes–comments, underscoring coupled audience reactions—videos that attract eyeballs reliably garner proportional likes and discourse.
-
-3.3 Category-Level Insights
-Music and Entertainment account for nearly half the trending list and lead all categories in average views (≈ 55 L) and likes (≈ 3 L)
-
-News & Politics trend less frequently and with lower median engagement, perhaps reflecting shorter shelf-life content
-
-Category skew mirrors prior cross-country studies, strengthening external validity
-
-3.4 Duration Effects
-0–5 min videos outperform all other bins with ≈ 60 L mean views, suggesting snack-able content drives virality
-
-Engagement declines monotonically beyond 10 min, aligning with viewer watch-time fatigue reported in platform white-papers
-
-3.5 Metadata Factors
-Tags: Scatterplots show diffuse clouds with a near-zero slope—tag proliferation alone does not predict views. Creators should focus on relevance, not sheer quantity.
-
-Publish Hour: Trending uploads scatter across the clock; mild clustering at 12:00–15:00 IST hints at afternoon traction, but the effect lacks statistical heft. This corroborates anecdotal claims that content quality outweighs timing once a video lands on the trending list.
-
-4. Key Take-aways
-Virality is unequal—a minority of videos reap disproportionate engagement
-
-Content vertical matters: Music and Entertainment dominate
-
-Concise videos (< 10 min) maximize average views
-
-Metadata quantity (tags) offers limited lift; strategic relevance is preferable
-
-Upload timing is secondary; quality and audience fit prevail
-
-5. Project Structure & Reproducibility
-text
+```
 variousda-ds/
 ├── finalyt.ipynb          # Full analysis notebook
-├── trending_videos.csv    # Raw API pull (example snapshot)
-├── imgs/                  # Auto-saved PNGs from notebook
-├── README.md              # *You are here*
-└── requirements.txt       # pandas, seaborn, matplotlib, google-api-python-client, isodate
-Quick Start
-One-click Re-run:
+├── trending_videos.csv    # Raw snapshot data
+├── README.md              
+```
 
-Add your YouTube API key in the config cell
+### Quick Start
 
-Execute all cells (Runtime → Run all)
+1. Insert your API key in the notebook configuration
+2. Run all cells: Runtime → Run All
+3. Automatically downloads and visualizes updated data
 
-Plots regenerate and CSV refreshes
+Compatible with Google Colab and local Jupyter environments
 
-Environment: Python 3.10; tested on Google Colab & local Jupyter Lab
+---
 
-Dependencies
-text
+## Dependencies
+
+```txt
 pandas>=1.3.0
 matplotlib>=3.5.0
 seaborn>=0.11.0
 google-api-python-client>=2.0.0
 isodate>=0.6.0
+```
 
-License
-This project is open source and available under the MIT License.
+---
 
-Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss the proposed modifications.
+
+---
+
+Built and maintained with a commitment to research-driven analytics.
+
