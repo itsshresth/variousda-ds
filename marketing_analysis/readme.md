@@ -38,8 +38,8 @@ ShopEasy, an online retail business, faced challenges with declining customer en
 - **Insight Extraction:** Used SQL queries for descriptive statistics and key metric calculations.
 
 ![SQL QUERY WITH RESULT1](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142916.png)
-![SQL QUERY WITH RESULT1](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142930.png)
-![SQL QUERY WITH RESULT1](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142943.png)
+![SQL QUERY WITH RESULT2](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142930.png)
+![SQL QUERY WITH RESULT3](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142943.png)
 
 ### 2. Customer Engagement \& Sentiment Analysis (Python)
 
@@ -57,6 +57,7 @@ ShopEasy, an online retail business, faced challenges with declining customer en
     - Customer engagement trends (views, clicks, likes)
     - Sentiment distribution and feedback analysis
     - Content type performance
+![BI DASHBOARD](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/Screenshot%202025-07-11%20153731.png)
 
 
 ## Key Insights \& Achievements
