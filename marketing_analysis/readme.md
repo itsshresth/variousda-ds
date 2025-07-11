@@ -1,4 +1,4 @@
-#Marketing Analytics Case Study
+##Marketing Analytics Case Study
 
 ## Overview
 
@@ -37,6 +37,9 @@ ShopEasy, an online retail business, faced challenges with declining customer en
 - **Duplicate \& Null Handling:** Removed duplicate records and replaced null values to ensure data integrity.
 - **Insight Extraction:** Used SQL queries for descriptive statistics and key metric calculations.
 
+![SQL QUERY WITH RESULT1](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142916.png)
+![SQL QUERY WITH RESULT1](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142930.png)
+![SQL QUERY WITH RESULT1](https://github.com/itsshresth/variousda-ds/blob/master/marketing_analysis/sql%20results/Screenshot%202025-07-11%20142943.png)
 
 ### 2. Customer Engagement \& Sentiment Analysis (Python)
 
